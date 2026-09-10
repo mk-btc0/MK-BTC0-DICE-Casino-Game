@@ -1,28 +1,18 @@
-# MK-BTC0-DICE-Casino-Game
-👤 AUTHOR
-MK-BTC0
+🎲 MK-BTC0 DICE Casino Game
 
-🎰 Casino Game Developer
+A casino dice game project by MK-BTC0.
 
-💻 Built with HTML, CSS & JavaScript
+🚧 Status: In development
 
-⭐ SUPPORT
-If you like this game:
+📊 Presentation
 
-⭐ Star the repository
+▶️ View Project Presentation
 
-🐛 Report bugs via Issues
+👤 Author
 
-💡 Suggest new features
+MK-BTC0 — Casino Game Developer
 
-🔗 Share the live link
+⭐ More updates coming soon.
 
-© MK-BTC0 Casino — Play Responsibly 🎲
-
-🔗 QUICK LINKS
 https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
-Link	Description
 
-▶️ Play Now	Live game demo
-📂 GitHub Repo	Source code
-🐛 Report Bug	Issues page
