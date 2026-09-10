@@ -21,8 +21,6 @@ If you like this game:
 
 🔗 QUICK LINKS
 https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
-https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
-https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
 Link	Description
 
 ▶️ Play Now	Live game demo
