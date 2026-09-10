@@ -1,18 +1,10 @@
-🎲 MK-BTC0 DICE Casino Game
+🎰 MK-BTC0 DICE
+A high-velocity casino game of probability, strategic wagers, and instant duels against the house engine.
 
-A casino dice game project by MK-BTC0.
+🎲 🎲
 
-🚧 Status: In development
+Game Architecture & Rules by Markuss Karpovs
 
-📊 Presentation
-
-▶️ View Project Presentation
-
-👤 Author
-
-MK-BTC0 — Casino Game Developer
-
-⭐ More updates coming soon.
-
-https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
-
+🔗 Links
+🌐 ▶ Play Now  https://mk-btc0.github.io/MK-BTC0-DICE-Casino-Game/
+📊 Presentation — https://docs.google.com/presentation/d/1KTU9ZG5b6N56LsI_AHPZc_D8iP-dbfpN/edit?usp=sharing&ouid=116953388117023629811&rtpof=true&sd=true
