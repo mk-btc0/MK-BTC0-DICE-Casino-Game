@@ -3,8 +3,251 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gameplay — MK-BTC0 DICE</title>
+<title>Play — MK-BTC0 DICE</title>
 <link rel="stylesheet" href="style.css">
+<style>
+  /* ===== GAME-SPECIFIC STYLES ===== */
+  .game-container {
+    max-width: 760px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, #0f1f0f, #050a05);
+    border: 3px solid var(--gold);
+    border-radius: 24px;
+    padding: 30px 28px;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.25),
+                inset 0 0 60px rgba(0, 0, 0, 0.6);
+    position: relative;
+  }
+
+  .game-container::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed rgba(255, 215, 0, 0.3);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
+  .game-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .game-stat {
+    background: rgba(255, 215, 0, 0.07);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .game-stat .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9fc79f;
+  }
+
+  .game-stat .value {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-top: 4px;
+    font-family: monospace;
+  }
+
+  .dice-arena {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 215, 0, 0.35);
+    border-radius: 18px;
+    padding: 24px 16px;
+    margin-bottom: 20px;
+  }
+
+  .dice-slot { text-align: center; flex: 1; }
+
+  .dice-slot .who {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #9fc79f;
+    margin-bottom: 10px;
+  }
+
+  .die {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #ffffff, #d8d8d8);
+    border-radius: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 12px;
+    gap: 4px;
+    box-shadow: 0 6px 0 #999, 0 10px 22px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease;
+  }
+
+  .die.rolling { animation: shake 0.4s ease infinite; }
+
+  @keyframes shake {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    25% { transform: rotate(-8deg) translateY(-4px); }
+    75% { transform: rotate(8deg) translateY(4px); }
+  }
+
+  .pip { border-radius: 50%; background: transparent; }
+  .pip.on {
+    background: #1a1a1a;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.3);
+  }
+
+  .vs-tag {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--gold);
+    padding: 0 8px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+  }
+
+  .bet-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .bet-row input {
+    flex: 1;
+    padding: 14px;
+    background: #0a1a0a;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 12px;
+    color: var(--gold);
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-align: center;
+    outline: none;
+    font-family: monospace;
+  }
+
+  .bet-row input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+  }
+
+  .quick-bet-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .quick-bet-row button {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 10px;
+    color: var(--gold);
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+
+  .quick-bet-row button:hover {
+    background: rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .roll-btn {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(145deg, #ffd700, #b8860b);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #6e550d, 0 10px 22px rgba(0, 0, 0, 0.5);
+    transition: all 0.15s;
+  }
+
+  .roll-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #6e550d, 0 14px 26px rgba(0, 0, 0, 0.6);
+  }
+
+  .roll-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #6e550d;
+  }
+
+  .roll-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .result-box {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .result-box.win {
+    background: rgba(40, 167, 69, 0.18);
+    border: 2px solid #28a745;
+    color: #5eff7a;
+  }
+
+  .result-box.lose {
+    background: rgba(220, 53, 69, 0.18);
+    border: 2px solid #dc3545;
+    color: #ff7a88;
+  }
+
+  .result-box.tie {
+    background: rgba(255, 193, 7, 0.15);
+    border: 2px solid #ffc107;
+    color: #ffd766;
+  }
+
+  .result-box.info {
+    background: rgba(255, 215, 0, 0.08);
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    color: var(--gold);
+  }
+
+  .streak-msg {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #9fc79f;
+    margin-top: 10px;
+    min-height: 18px;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 520px) {
+    .die { width: 70px; height: 70px; padding: 9px; }
+    .game-stat .value { font-size: 1.15rem; }
+    .game-container { padding: 20px 16px; }
+  }
+</style>
 </head>
 <body>
 
@@ -19,15 +262,345 @@
 </nav>
 
 <div class="page-header">
-  <h1>How to Play</h1>
-  <p>Four simple steps to master the dice duel.</p>
+  <h1>🎰 Play MK-BTC0 DICE</h1>
+  <p>Place your bet. Roll the dice. Beat the house.</p>
 </div>
 
-<!-- STEPS -->
+<!-- ===== GAME ===== -->
+<section>
+  <div class="game-container">
+
+    <!-- STATS -->
+    <div class="game-stats">
+      <div class="game-stat">
+        <div class="label">Chips</div>
+        <div class="value" id="chipsVal">1000</div>
+      </div>
+      <div class="game-stat">
+        <div class="label">Win Streak</div>
+        <div class="value" id="winStreakVal">0</div>
+      </div>
+      <div class="game-stat">
+        <div class="label">Loss Streak</div>
+        <div class="value" id="lossStreakVal">0</div>
+      </div>
+    </div>
+
+    <!-- DICE -->
+    <div class="dice-arena">
+      <div class="dice-slot">
+        <div class="who">Your Die</div>
+        <div class="die" id="playerDie"></div>
+      </div>
+      <div class="vs-tag">VS</div>
+      <div class="dice-slot">
+        <div class="who">Casino Die</div>
+        <div class="die" id="casinoDie"></div>
+      </div>
+    </div>
+
+    <!-- BET INPUT -->
+    <div class="bet-row">
+      <input type="number" id="betInput" value="50" min="10" max="100" step="10">
+    </div>
+
+    <!-- QUICK BETS -->
+    <div class="quick-bet-row">
+      <button onclick="setBet(10)">10</button>
+      <button onclick="setBet(25)">25</button>
+      <button onclick="setBet(50)">50</button>
+      <button onclick="setBet(75)">75</button>
+      <button onclick="setBet(100)">100</button>
+    </div>
+
+    <!-- ROLL BUTTON -->
+    <button class="roll-btn" id="rollBtn" onclick="playRound()">🎲 ROLL DICE</button>
+
+    <!-- RESULT -->
+    <div class="result-box info" id="resultBox">Place your bet and roll the dice!</div>
+    <div class="streak-msg" id="streakMsg"></div>
+  </div>
+</section>
+
+<!-- INFO SECTION -->
 <section>
   <span class="section-label">The Round Flow</span>
   <h2>Four Steps to <span class="accent">Victory</span></h2>
   <div class="steps">
     <div class="step">
       <div class="number">01</div>
-     
+      <h3>Bet Allocation</h3>
+      <p>Select a wager between 10 and 100 chips from your existing balance.</p>
+    </div>
+    <div class="step">
+      <div class="number">02</div>
+      <h3>The Double Roll</h3>
+      <p>House and player dice are rolled independently and revealed.</p>
+    </div>
+    <div class="step">
+      <div class="number">03</div>
+      <h3>Value Comparison</h3>
+      <p>Automated verification determines higher value or tie state.</p>
+    </div>
+    <div class="step">
+      <div class="number">04</div>
+      <h3>Settlement &amp; Bank</h3>
+      <p>Disbursement of 2x winnings, refund of ties, or bonus tracking.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ODDS -->
+<section>
+  <span class="section-label">Mathematical Odds</span>
+  <h2>Fairness &amp; <span class="accent">Balance</span></h2>
+  <p class="section-desc">
+    Out of 36 possible outcomes with two d6 dice, player and house share identical
+    win probabilities, while ties guarantee full capital preservation.
+  </p>
+
+  <div class="odds-container">
+    <div class="pie-chart"></div>
+    <div class="odds-legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background:#e63946;"></div>
+        <span class="label">Player Victory</span>
+        <span class="value">41.67%</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background:#f4a300;"></div>
+        <span class="label">Stand-off / Tie Refund</span>
+        <span class="value">16.66%</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background:#06a77d;"></div>
+        <span class="label">House Victory</span>
+        <span class="value">41.67%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYOUT BARS -->
+<section>
+  <span class="section-label">Payout Scaling</span>
+  <h2>Scalable <span class="accent">Returns</span></h2>
+  <p class="section-desc">
+    Toggle between cautious bankroll longevity and aggressive growth targeting
+    maximum 200-chip single-round returns.
+  </p>
+
+  <div class="bet-bars">
+    <div class="bet-bar">
+      <span class="label">Max Wager (100)</span>
+      <div class="bar bar-max">200 Chips</div>
+    </div>
+    <div class="bet-bar">
+      <span class="label">High Wager (75)</span>
+      <div class="bar bar-high">150 Chips</div>
+    </div>
+    <div class="bet-bar">
+      <span class="label">Mid Wager (50)</span>
+      <div class="bar bar-mid">100 Chips</div>
+    </div>
+    <div class="bet-bar">
+      <span class="label">Low Wager (25)</span>
+      <div class="bar bar-low">50 Chips</div>
+    </div>
+    <div class="bet-bar">
+      <span class="label">Table Min (10)</span>
+      <div class="bar bar-min">20 Chips</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><span class="gold">MK-BTC0 DICE</span> — © 2025 Markus Karpovs</p>
+  <p style="margin-top:8px;">Play Responsibly · For Entertainment Purposes Only</p>
+</footer>
+
+<script>
+  // ===== GAME STATE =====
+  let chips = 1000;
+  let winStreak = 0;
+  let lossStreak = 0;
+  let loanUsed = false;
+  let rolling = false;
+
+  // ===== DOM =====
+  const chipsVal = document.getElementById('chipsVal');
+  const winStreakVal = document.getElementById('winStreakVal');
+  const lossStreakVal = document.getElementById('lossStreakVal');
+  const betInput = document.getElementById('betInput');
+  const rollBtn = document.getElementById('rollBtn');
+  const resultBox = document.getElementById('resultBox');
+  const streakMsg = document.getElementById('streakMsg');
+  const playerDie = document.getElementById('playerDie');
+  const casinoDie = document.getElementById('casinoDie');
+
+  // ===== DICE PATTERNS (1..9 in 3x3 grid) =====
+  const DICE_PATTERNS = {
+    1: [5],
+    2: [1, 9],
+    3: [1, 5, 9],
+    4: [1, 3, 7, 9],
+    5: [1, 3, 5, 7, 9],
+    6: [1, 3, 4, 6, 7, 9]
+  };
+
+  function renderDie(el, value) {
+    el.innerHTML = '';
+    const on = DICE_PATTERNS[value] || [];
+    for (let i = 1; i <= 9; i++) {
+      const pip = document.createElement('div');
+      pip.className = 'pip' + (on.includes(i) ? ' on' : '');
+      el.appendChild(pip);
+    }
+  }
+
+  function setBet(v) { betInput.value = v; }
+
+  function updateUI() {
+    chipsVal.textContent = chips;
+    winStreakVal.textContent = winStreak;
+    lossStreakVal.textContent = lossStreak;
+  }
+
+  function setResult(text, type) {
+    resultBox.textContent = text;
+    resultBox.className = 'result-box ' + type;
+  }
+
+  function randomDie() { return Math.floor(Math.random() * 6) + 1; }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ===== MAIN GAME LOOP =====
+  async function playRound() {
+    if (rolling) return;
+
+    let bet = parseInt(betInput.value, 10);
+
+    // Validate
+    if (isNaN(bet) || bet < 10 || bet > 100) {
+      setResult('❌ Bet must be between 10 and 100 chips!', 'lose');
+      return;
+    }
+
+    if (bet > chips) {
+      if (!loanUsed && chips < 10) {
+        loanUsed = true;
+        chips += 100;
+        updateUI();
+        setResult('🏦 Emergency loan granted: +100 chips!', 'info');
+        await sleep(1200);
+      } else {
+        setResult('❌ Not enough chips!', 'lose');
+        return;
+      }
+    }
+
+    let loanRepay = (loanUsed && chips > 0) ? Math.floor(bet * 0.1) : 0;
+
+    rolling = true;
+    rollBtn.disabled = true;
+
+    chips -= bet;
+    updateUI();
+
+    // Animation
+    playerDie.classList.add('rolling');
+    casinoDie.classList.add('rolling');
+    setResult('🎲 Rolling...', 'info');
+
+    for (let i = 0; i < 12; i++) {
+      renderDie(playerDie, randomDie());
+      renderDie(casinoDie, randomDie());
+      await sleep(70);
+    }
+
+    const p = randomDie();
+    const c = randomDie();
+    renderDie(playerDie, p);
+    renderDie(casinoDie, c);
+    playerDie.classList.remove('rolling');
+    casinoDie.classList.remove('rolling');
+
+    await sleep(300);
+
+    // RESOLVE
+    let msg = '';
+    let type = '';
+
+    if (p > c) {
+      let winAmount = bet * 2;
+      winStreak++;
+      lossStreak = 0;
+
+      let bonus = 0;
+      if (winStreak % 3 === 0) {
+        bonus = 50;
+        msg = `🔥 3 wins in a row! +50 BONUS! `;
+      }
+
+      chips += winAmount + bonus;
+
+      let repayMsg = '';
+      if (loanUsed && loanRepay > 0) {
+        chips -= loanRepay;
+        repayMsg = ` (Loan repay: -${loanRepay})`;
+      }
+
+      msg += `🏆 You win! ${p} > ${c} → +${winAmount}${bonus ? ' +50' : ''}${repayMsg}`;
+      type = 'win';
+
+    } else if (p < c) {
+      lossStreak++;
+      winStreak = 0;
+      msg = `❌ You lose! ${p} < ${c} → -${bet} chips`;
+      type = 'lose';
+
+    } else {
+      chips += bet;
+      msg = `🤝 Tie! ${p} = ${c} → bet returned`;
+      type = 'tie';
+    }
+
+    updateUI();
+
+    // Bankruptcy
+    if (chips < 10) {
+      if (!loanUsed) {
+        loanUsed = true;
+        chips += 100;
+        updateUI();
+        msg += ' | 🏦 Emergency loan: +100 chips!';
+      } else {
+        msg += ' | 💀 GAME OVER — bankrupt!';
+        rollBtn.disabled = true;
+        rollBtn.textContent = '💀 GAME OVER';
+        setResult(msg, 'lose');
+        rolling = false;
+        return;
+      }
+    }
+
+    setResult(msg, type);
+    streakMsg.textContent = `Win streak: ${winStreak} | Loss streak: ${lossStreak}`;
+
+    rolling = false;
+    rollBtn.disabled = false;
+  }
+
+  // Enter key to roll
+  betInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') playRound();
+  });
+
+  // Init
+  updateUI();
+  renderDie(playerDie, 1);
+  renderDie(casinoDie, 1);
+</script>
+
+</body>
+</html>
